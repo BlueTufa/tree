@@ -7,3 +7,5 @@ name = "tree"
 version = "0.1.0"
 readme = "README.md"
 
+[dependencies]
+regex = "1"

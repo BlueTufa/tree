@@ -1,8 +1,14 @@
+extern crate regex;
 use std::fs;
 use std::io;
 use std::env;
+use regex::Regex;
+use std::ffi::OsString;
+use std::env::args_os;
 
 fn main() -> io::Result<()> {
+  let args: Vec<OsString> = args_os().skip(1).collect();
+  
   let cwd = get_path().unwrap().work_dir;
   recurse(&cwd)
 }
@@ -23,6 +29,10 @@ fn recurse(start: &str) -> io::Result<()> {
 
 pub struct Path {
   work_dir: String
+}
+
+pub struct Filters {
+  regex: Option<String>
 }
 
 fn get_path() -> std::io::Result<Path> {
