@@ -1,14 +1,26 @@
 extern crate regex;
+#[macro_use]
+extern crate lazy_static;
 use std::fs;
 use std::io;
 use std::env;
-use regex::Regex;
+use regex::RegexSet;
 use std::ffi::OsString;
 use std::env::args_os;
 
+fn filter_scan(input: &str) -> bool {
+  lazy_static! {
+    static ref RE: RegexSet = RegexSet::new(&[r"\.git"]).unwrap();
+  }
+  let matches: Vec<_> = RE.matches(input).into_iter().collect();
+  !matches.is_empty()
+}
+
 fn main() -> io::Result<()> {
   let args: Vec<OsString> = args_os().skip(1).collect();
-  
+  for arg in args {
+    println!("{:?}", arg);
+  }
   let cwd = get_path().unwrap().work_dir;
   recurse(&cwd)
 }
@@ -21,7 +33,9 @@ fn recurse(start: &str) -> io::Result<()> {
         recurse(&dir).expect("Could not traverse directory.");
       } else {
         let full_path = item.to_str();
-        println!("{}", full_path.unwrap());
+        if filter_scan(full_path.unwrap()) {
+          println!("{}", full_path.unwrap());
+        }
       }
     }
   Ok(())
@@ -29,10 +43,6 @@ fn recurse(start: &str) -> io::Result<()> {
 
 pub struct Path {
   work_dir: String
-}
-
-pub struct Filters {
-  regex: Option<String>
 }
 
 fn get_path() -> std::io::Result<Path> {
