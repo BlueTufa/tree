@@ -12,3 +12,8 @@ Then do a cargo install within the root of the source tree:
 ```bash
 cargo install --path $(pwd)
 ```
+
+# Usage:
+```bash
+tree
+```
