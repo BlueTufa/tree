@@ -1,0 +1,9 @@
+[package]
+authors = ["Dan White <github@bluetufa.com"]
+categories = ["command line utilities"]
+description = "List files recursively"
+license = "MIT"
+name = "tree"
+version = "0.1.0"
+readme = "README.md"
+
