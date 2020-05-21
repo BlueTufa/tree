@@ -17,3 +17,5 @@ cargo install --path $(pwd)
 ```bash
 tree
 ```
+## Regex support
+You can pass any 
