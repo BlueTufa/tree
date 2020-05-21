@@ -1,39 +1,33 @@
 extern crate regex;
-#[macro_use]
-extern crate lazy_static;
 use std::fs;
 use std::io;
 use std::env;
-use regex::RegexSet;
-use std::ffi::OsString;
-use std::env::args_os;
+use regex::Regex;
 
-fn filter_scan(input: &str) -> bool {
-  lazy_static! {
-    static ref RE: RegexSet = RegexSet::new(&[r"\.git"]).unwrap();
-  }
-  let matches: Vec<_> = RE.matches(input).into_iter().collect();
-  !matches.is_empty()
+fn filter_scan(input: &str, filter: &str) -> bool {
+  let reg_ex: Regex = Regex::new(filter).unwrap();
+  reg_ex.is_match(input)
 }
 
 fn main() -> io::Result<()> {
-  let args: Vec<OsString> = args_os().skip(1).collect();
-  for arg in args {
-    println!("{:?}", arg);
+
+  let mut filters = Vec::new();
+  for arg  in std::env::args().skip(1) {
+    filters.push(arg)
   }
   let cwd = get_path().unwrap().work_dir;
-  recurse(&cwd)
+  recurse(&cwd, &filters.get(0).unwrap())
 }
 
-fn recurse(start: &str) -> io::Result<()> {
+fn recurse(start: &str, filter: &str) -> io::Result<()> {
     let items: Vec<_> = fs::read_dir(start)?.map(|item| item.unwrap().path()).collect();
     for item in items {
       if item.is_dir() {
         let dir = item.to_str().unwrap();
-        recurse(&dir).expect("Could not traverse directory.");
+        recurse(&dir, &filter).expect("Could not traverse directory.");
       } else {
         let full_path = item.to_str();
-        if filter_scan(full_path.unwrap()) {
+        if filter_scan(full_path.unwrap(), filter) {
           println!("{}", full_path.unwrap());
         }
       }
