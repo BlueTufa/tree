@@ -4,14 +4,14 @@ use std::io;
 use std::env;
 use regex::Regex;
 
-fn filter_scan(input: &str, filter: String) -> bool {
-  let reg_ex: Regex = Regex::new(&filter).unwrap();
+fn filter_scan(input: &str, filter: &str) -> bool {
+  let reg_ex: Regex = Regex::new(filter).unwrap();
   reg_ex.is_match(input)
 }
 
 fn main() -> io::Result<()> {
   let mut filter: Option<String> = None;
-  for arg  in std::env::args().skip(1) {
+  for arg in std::env::args().skip(1) {
     filter = Some(arg);
     break;
   }
@@ -28,11 +28,15 @@ fn recurse(start: &str, options: &Options) -> io::Result<()> {
         recurse(&dir, &options).expect("Could not traverse directory.");
       } else {
         let full_path = item.to_str();
-        if options.filters.is_some() 
-          && filter_scan(full_path.unwrap(), options.filters.unwrap().clone()) {
-          println!("{}", full_path.unwrap());
-        } else { 
-          println!("{}", full_path.unwrap());
+        match &options.filters {
+          Some(f) => {
+            if filter_scan(full_path.unwrap(), f) {
+              println!("{}", full_path.unwrap());
+            }
+          },
+          _ => { 
+            println!("{}", full_path.unwrap()); 
+          }
         }
       }
     }
