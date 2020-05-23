@@ -1,4 +1,4 @@
-A simple tree view which prints the full path of all files on a local file system.
+A simple tree view which prints the full path of all files on a local file system, starting at the current working directory.
 
 This is very useful as an input to pipe operations.
 
