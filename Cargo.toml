@@ -1,11 +1,14 @@
 [package]
-authors = ["Dan White <github@bluetufa.com"]
-categories = ["command line utilities"]
-description = "List files recursively"
-license = "MIT"
 name = "tree"
 version = "0.1.0"
+authors = ["Dan White <github@bluetufa.com"]
+categories = ["command line utilities"]
+description = "List file names recursively"
+repository = "https://github.com/BlueTufa/tree"
+keywords = ["tree", "command-line", "utilities", "rust"]
+license-file = "LICENSE"
 readme = "README.md"
+edition = "2018"
 
 [dependencies]
 regex = "1"
