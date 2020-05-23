@@ -8,9 +8,14 @@ Start by installing rustup.
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-Then do a cargo install within the root of the source tree:
+Then do a cargo install within the root of this source tree:
 ```bash
 cargo install --path $(pwd)
+```
+
+Make sure you have `$HOME/.cargo/bin` in your path.
+```bash
+export PATH=$HOME/.cargo/bin:$PATH
 ```
 
 # Usage:
