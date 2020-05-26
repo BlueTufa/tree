@@ -1,6 +1,8 @@
 extern crate regex;
 use std::fs;
 use std::io;
+use std::io::Write;
+use std::io::stderr;
 use std::env;
 use regex::Regex;
 
@@ -23,20 +25,31 @@ fn main() -> io::Result<()> {
 fn recurse(start: &str, options: &Options) -> io::Result<()> {
     let items: Vec<_> = fs::read_dir(start)?.map(|item| item.unwrap().path()).collect();
     for item in items {
-      if item.is_dir() {
-        let dir = item.to_str().unwrap();
-        recurse(&dir, &options).expect("Could not traverse directory.");
-      } else {
-        let full_path = item.to_str();
-        match &options.filters {
-          Some(f) => {
-            if filter_scan(full_path.unwrap(), f) {
-              println!("{}", full_path.unwrap());
-            }
-          },
-          _ => { 
-            println!("{}", full_path.unwrap()); 
+      match (item.is_dir(), item.is_file()) {
+        (true, false) => {
+          let dir = item.to_str().unwrap();
+          match recurse(&dir, &options) {
+            Err(_) => {
+              writeln!(stderr(), "ERROR: Unable to read path {}", dir)?;
+            },
+            _ => {}
           }
+        },
+        (false, true) => {
+          let full_path = item.to_str();
+          match &options.filters {
+            Some(f) => {
+              if filter_scan(full_path.unwrap(), f) {
+                println!("{}", full_path.unwrap());
+              }
+            },
+            _ => { 
+              println!("{}", full_path.unwrap()); 
+            }
+          }
+        },
+        (_, _) => {
+          writeln!(stderr(), "ERROR: Unable to read path {}", item.to_str().unwrap())?;
         }
       }
     }
