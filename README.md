@@ -25,11 +25,11 @@ tree
 ## Regex support
 You can pass any regex in as an optional arg and it will filter out those file names inline.  
 
-Example: filter out any files with `.git` in the name.
+Example: include only files with `.git` in the name.
 ```bash
 tree '\.git'
 ```
-Example: filter out any file ending with `.d`.
+Example: include only files ending with `.d`.
 ```bash
 tree '\.d$'
 ```
