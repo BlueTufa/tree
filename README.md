@@ -1,3 +1,7 @@
+# NOTE: This utility is deprecated and will only be left here for historical and source code sharing purposes.  
+As an alternative, I recommend using the excellent https://github.com/sharkdp/fd instead.  It does everything I envisioned this utility doing and some extra, and is also written in Rust.  
+
+# Description
 A simple tree view which prints the full path of all files on a local file system, starting at the current working directory.
 
 This is very useful as an input to pipe operations.
